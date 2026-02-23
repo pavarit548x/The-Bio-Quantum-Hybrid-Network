@@ -1,0 +1,38 @@
+==================================================
+   BIO-QUANTUM HYBRID NETWORK EMULATOR STARTED    
+==================================================
+
+--> Initializing Layer 1: Mycelium Topology...
+--> Mycelium Mesh Created. Nodes: ['A', 'B', 'C', 'D', 'E']
+--> Computed Route Example (Slime Mold A->D): ['A', 'B', 'D']
+
+--> Network Port Configuration:
+    Node A -> localhost:5001
+    Node B -> localhost:5002
+    Node C -> localhost:5003
+    Node D -> localhost:5004
+    Node E -> localhost:5005
+
+--> Spinning up Node socket listeners...
+[Node A] Booted and listening on 127.0.0.1:5001...
+[Node B] Booted and listening on 127.0.0.1:5002...
+[Node C] Booted and listening on 127.0.0.1:5003...
+[Node D] Booted and listening on 127.0.0.1:5004...
+[Node E] Booted and listening on 127.0.0.1:5005...
+
+--> Initiating Packet Transfer Sequence...
+
+[Node A] ==================================================
+[Node A] Initiating Transfer | Target: Node D
+[Node A] 🗨️ Original Message: 'HELLO QUANTUM WORLD!'
+[Node A] 🧬 Layer 4 Bio-Translation (Encoded DNA): CAGACACCCATACATACATTAGAACCACCCCCCAACCATGCCCACCCCCATCAGAACCCTCATTCCAGCATACACAAGAC
+[Node A] ➡️ First hop is Node B. Sending...
+[Node A] ==================================================
+
+
+[Node B] --------------------------------------------------
+[Node B] Packet Arrived | From: A -> To: D
+[Node B] ❌ EMERGENCY LOGOUT! HRV too low (37.6 < 40). Connection cut.
+
+--> Shutting down Bio-Quantum Network...
+--> All nodes offline. Simulation complete.
