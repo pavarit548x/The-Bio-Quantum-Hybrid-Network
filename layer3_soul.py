@@ -14,7 +14,7 @@ def verify_soul_id(user_id: str, dna_sample: str, eeg_sample: str) -> bool:
         return True
     return False
 
-def check_psycho_breaker() -> tuple[bool, str]:
+def check_psycho_breaker(force_fail: bool = False, force_safe: bool = False) -> tuple[bool, str]:
     """
     PsychoBreaker: Generates a random HRV (Heart Rate Variability) and Cortisol level.
     If HRV < 40 or Cortisol > 25, the node MUST actively reject the connection/packet.
@@ -22,12 +22,14 @@ def check_psycho_breaker() -> tuple[bool, str]:
     Returns:
         (is_safe: bool, reason: str)
     """
+    if force_fail:
+        return False, "Cortisol too high (29.9 > 25) [FORCED SIMULATION FAILURE]"
+    if force_safe:
+        return True, "Vitals OK (HRV: 85.0, Cort: 15.0) [FORCED SIMULATION SUCCESS]"
+
     # Generate random physiological data
     hrv = random.uniform(30.0, 100.0) # normal: 50-100, abnormal: < 40
     cortisol = random.uniform(10.0, 30.0) # normal: 10-20, abnormal: > 25
-    
-    # 10% chance to force an emergency logout for demonstration if we want,
-    # but let's stick to the raw probability from the uniform distribution.
     
     if hrv < 40.0:
         return False, f"HRV too low ({hrv:.1f} < 40)"

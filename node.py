@@ -109,8 +109,12 @@ class Node:
             log(self.node_id, "Layer 3 Failed: Invalid Soul ID. Dropping packet.", RED)
             return False
 
+        attempt = packet.get('attempt', 1)
+        force_fail = (self.node_id == 'B' and attempt == 1)
+        force_safe = (attempt > 1)
+        
         # --- Layer 3: Psycho-Breaker ---
-        is_safe, reason = check_psycho_breaker()
+        is_safe, reason = check_psycho_breaker(force_fail=force_fail, force_safe=force_safe)
         if not is_safe:
             log(self.node_id, f"EMERGENCY LOGOUT! {reason}. Connection cut via Psycho-Breaker.", RED)
             return False
@@ -127,6 +131,12 @@ class Node:
             # --- Layer 4: Decoding ---
             original_msg = decode_dna_to_message(dna_payload)
             log(self.node_id, f"🧬 Layer 4 Bio-Translation (Decoded): '{original_msg}'", GREEN)
+            
+            # Simulated Layer 5 Delay
+            time.sleep(0.5)
+            # --- Layer 5: Neural Interface ---
+            log(self.node_id, "🧠 [Layer 5] Direct Cortical Stimulation active. Delivering data to Visual Cortex...", GREEN)
+            
             log(self.node_id, f"SUCCESS: Transmission Delivery Confirmed.", GREEN)
             return True
         else:
@@ -146,8 +156,10 @@ class Node:
             next_hop = path[1] # index 0 is self
             log(self.node_id, f"➡️ Next hop computed: Node {next_hop}. Forwarding...", CYAN)
             
-            # Processing Time & Hopping
+            # Layer 2 QoS Processing
+            log(self.node_id, "🌊 [Layer 2] Applying Fluidic Stream QoS. Stabilizing Jitter to 0.1ms...", CYAN)
             time.sleep(0.4) 
+            
             target_port = self.port_mapping[next_hop]
             success = self.forward_packet(next_hop, target_port, packet)
             
@@ -161,6 +173,9 @@ class Node:
                 if self.topology.has_node(next_hop):
                     self.topology.remove_node(next_hop)
                 
+                # Increment attempt parameter to force logic
+                packet['attempt'] = packet.get('attempt', 1) + 1
+                
                 # Sleep briefly before finding a new path
                 time.sleep(0.2)
 
@@ -168,7 +183,7 @@ class Node:
         """Sends a JSON packet over TCP socket to the next hop and waits for an ACK/NACK."""
         try:
              s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-             s.settimeout(2.0)
+             s.settimeout(10.0)
              s.connect((self.host, target_port))
              s.sendall(json.dumps(packet).encode('utf-8'))
              response = s.recv(1024).decode('utf-8')
@@ -198,7 +213,8 @@ class Node:
             'src': self.node_id,
             'dst': dst,
             'payload': dna_payload,
-            'user_id': 'quantum_user_1X'
+            'user_id': 'quantum_user_1X',
+            'attempt': 1
         }
         
         success = self.route_and_forward(dst, packet)

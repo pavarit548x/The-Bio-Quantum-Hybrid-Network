@@ -1,0 +1,60 @@
+[96m[23:13:20.289] [SYSTEM] ==================================================[0m
+[96m[23:13:20.289] [SYSTEM]    BIO-QUANTUM HYBRID NETWORK EMULATOR STARTED    [0m
+[96m[23:13:20.289] [SYSTEM] ==================================================[0m
+[96m[23:13:20.789] [SYSTEM] Initializing Layer 1: Mycelium Topology...[0m
+[92m[23:13:21.290] [SYSTEM] Mycelium Mesh Created. Nodes: ['A', 'B', 'C', 'D', 'E'][0m
+[96m[23:13:21.791] [SYSTEM] Network Port Configuration mapped.[0m
+[96m[23:13:21.791] [SYSTEM]     Node A -> localhost:5001[0m
+[96m[23:13:21.791] [SYSTEM]     Node B -> localhost:5002[0m
+[96m[23:13:21.791] [SYSTEM]     Node C -> localhost:5003[0m
+[96m[23:13:21.791] [SYSTEM]     Node D -> localhost:5004[0m
+[96m[23:13:21.791] [SYSTEM]     Node E -> localhost:5005[0m
+[96m[23:13:22.291] [SYSTEM] Spinning up Node socket listeners [Slime Mold Pathfinding Enabled]...[0m
+[96m[23:13:22.297] [Node A] Booted and listening on 127.0.0.1:5001...[0m
+[96m[23:13:22.398] [Node B] Booted and listening on 127.0.0.1:5002...[0m
+[96m[23:13:22.499] [Node C] Booted and listening on 127.0.0.1:5003...[0m
+[96m[23:13:22.600] [Node D] Booted and listening on 127.0.0.1:5004...[0m
+[96m[23:13:22.700] [Node E] Booted and listening on 127.0.0.1:5005...[0m
+
+[96m[23:13:23.801] [SYSTEM] Initiating Packet Transfer Sequence...[0m
+[96m[23:13:23.801] [Node A] ==================================================[0m
+[96m[23:13:23.801] [Node A] Initiating Transfer | Target: Node D[0m
+[96m[23:13:23.801] [Node A] 🗨️ Original Message: 'HELLO QUANTUM WORLD!'[0m
+[96m[23:13:24.301] [Node A] 🧬 Layer 4 Bio-Translation (Encoded DNA): CAGACACCCATACATACATTAGAACCACCCCCCAACCATGCCCACCCCCA...[0m
+[96m[23:13:24.301] [Node A] ➡️ Next hop computed: Node B. Forwarding...[0m
+[96m[23:13:24.301] [Node A] 🌊 [Layer 2] Applying Fluidic Stream QoS. Stabilizing Jitter to 0.1ms...[0m
+[96m[23:13:25.002] [Node B] Packet Arrived | ETH_HEADER: [SRC: A -> DST: D] | TYPE: QSP_DNA[0m
+[96m[23:13:25.002] [Node B] Raw Payload: CAGACACCCATACATACATTAGAACCACCC...[0m
+[91m[23:13:25.002] [Node B] EMERGENCY LOGOUT! Cortisol too high (29.9 > 25) [FORCED SIMULATION FAILURE]. Connection cut via Psycho-Breaker.[0m
+[93m[23:13:25.003] [Node A] Connection to B refused or timed out. Triggering Slime Mold Re-routing...[0m
+[96m[23:13:25.203] [Node A] ➡️ Next hop computed: Node C. Forwarding...[0m
+[96m[23:13:25.203] [Node A] 🌊 [Layer 2] Applying Fluidic Stream QoS. Stabilizing Jitter to 0.1ms...[0m
+[96m[23:13:25.905] [Node C] Packet Arrived | ETH_HEADER: [SRC: A -> DST: D] | TYPE: QSP_DNA[0m
+[96m[23:13:25.905] [Node C] Raw Payload: CAGACACCCATACATACATTAGAACCACCC...[0m
+[92m[23:13:25.905] [Node C] Layer 3 Checks Passed: Vitals OK (HRV: 85.0, Cort: 15.0) [FORCED SIMULATION SUCCESS][0m
+[96m[23:13:25.905] [Node C] Not the destination. Computing Slime Mold path to 'D'...[0m
+[96m[23:13:25.905] [Node C] ➡️ Next hop computed: Node B. Forwarding...[0m
+[96m[23:13:25.905] [Node C] 🌊 [Layer 2] Applying Fluidic Stream QoS. Stabilizing Jitter to 0.1ms...[0m
+[96m[23:13:26.606] [Node B] Packet Arrived | ETH_HEADER: [SRC: A -> DST: D] | TYPE: QSP_DNA[0m
+[96m[23:13:26.606] [Node B] Raw Payload: CAGACACCCATACATACATTAGAACCACCC...[0m
+[92m[23:13:26.606] [Node B] Layer 3 Checks Passed: Vitals OK (HRV: 85.0, Cort: 15.0) [FORCED SIMULATION SUCCESS][0m
+[96m[23:13:26.606] [Node B] Not the destination. Computing Slime Mold path to 'D'...[0m
+[96m[23:13:26.606] [Node B] ➡️ Next hop computed: Node D. Forwarding...[0m
+[96m[23:13:26.606] [Node B] 🌊 [Layer 2] Applying Fluidic Stream QoS. Stabilizing Jitter to 0.1ms...[0m
+[96m[23:13:27.308] [Node D] Packet Arrived | ETH_HEADER: [SRC: A -> DST: D] | TYPE: QSP_DNA[0m
+[96m[23:13:27.308] [Node D] Raw Payload: CAGACACCCATACATACATTAGAACCACCC...[0m
+[92m[23:13:27.308] [Node D] Layer 3 Checks Passed: Vitals OK (HRV: 85.0, Cort: 15.0) [FORCED SIMULATION SUCCESS][0m
+[92m[23:13:27.308] [Node D] 🎯 Packet reached final destination! Initiating Bio-Translation...[0m
+[93m[23:13:27.605] [Node A] Connection to C refused or timed out. Triggering Slime Mold Re-routing...[0m
+[91m[23:13:27.806] [Node A] Routing Error: No valid path to D.[0m
+[91m[23:13:27.806] [Node A] ==================================================[0m
+[91m[23:13:27.806] [Node A] Transmission completely FAILED. No routes available.[0m
+
+[92m[23:13:27.908] [Node D] 🧬 Layer 4 Bio-Translation (Decoded): 'HELLO QUANTUM WORLD!'[0m
+[93m[23:13:28.306] [Node C] Connection to B refused or timed out. Triggering Slime Mold Re-routing...[0m
+[92m[23:13:28.409] [Node D] 🧠 [Layer 5] Direct Cortical Stimulation active. Delivering data to Visual Cortex...[0m
+[92m[23:13:28.409] [Node D] SUCCESS: Transmission Delivery Confirmed.[0m
+[96m[23:13:28.507] [Node C] ➡️ Next hop computed: Node E. Forwarding...[0m
+[96m[23:13:28.507] [Node C] 🌊 [Layer 2] Applying Fluidic Stream QoS. Stabilizing Jitter to 0.1ms...[0m
+[96m[23:13:28.806] [SYSTEM] Shutting down Bio-Quantum Network...[0m
+[92m[23:13:29.308] [SYSTEM] All nodes offline. Simulation complete.[0m
