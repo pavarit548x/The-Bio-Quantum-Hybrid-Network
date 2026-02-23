@@ -104,14 +104,22 @@ class Node:
         log(self.node_id, f"Packet Arrived | ETH_HEADER: [SRC: {src} -> DST: {dst}] | TYPE: QSP_DNA", CYAN)
         log(self.node_id, f"Raw Payload: {dna_payload[:30]}...", CYAN)
         
-        # --- Layer 3: Soul Sync Verify ---
-        if not verify_soul_id(user_id, "ACTG_VALID", "EEG_WAVES_VALID"):
-            log(self.node_id, "Layer 3 Failed: Invalid Soul ID. Dropping packet.", RED)
-            return False
-
+        scenario = packet.get('scenario', 'normal')
         attempt = packet.get('attempt', 1)
-        force_fail = (self.node_id == 'B' and attempt == 1)
-        force_safe = (attempt > 1)
+        
+        force_fail = False
+        force_safe = False
+        
+        if scenario == 'happy':
+            force_safe = True
+        elif scenario == 'reroute':
+            if self.node_id == 'B' and attempt == 1:
+                force_fail = True
+            else:
+                force_safe = True
+        elif scenario == 'crisis':
+            # Force fail on the first node it hits to simulate immediate bio-rejection
+            force_fail = True
         
         # --- Layer 3: Psycho-Breaker ---
         is_safe, reason = check_psycho_breaker(force_fail=force_fail, force_safe=force_safe)
@@ -196,10 +204,10 @@ class Node:
              # Assume node failure (timeout or connection refused)
              return False
 
-    def send_initial_message(self, dst: str, message: str):
+    def send_initial_message(self, dst: str, message: str, scenario: str = 'normal'):
         """Initiates a message transfer from this node to a destination node."""
         log(self.node_id, "==================================================", CYAN)
-        log(self.node_id, f"Initiating Transfer | Target: Node {dst}", CYAN)
+        log(self.node_id, f"Initiating Transfer | Target: Node {dst} | Scenario: {scenario.upper()}", CYAN)
         log(self.node_id, f"🗨️ Original Message: '{message}'", CYAN)
         
         # Simulate initial encoding delay
@@ -214,7 +222,8 @@ class Node:
             'dst': dst,
             'payload': dna_payload,
             'user_id': 'quantum_user_1X',
-            'attempt': 1
+            'attempt': 1,
+            'scenario': scenario
         }
         
         success = self.route_and_forward(dst, packet)
