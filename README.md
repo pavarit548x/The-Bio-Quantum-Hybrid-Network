@@ -1,53 +1,53 @@
-# The Bio-Quantum Hybrid Network Emulator
+# อีมูเลเตอร์เครือข่ายลูกผสมชีวภาพ-ควอนตัม (The Bio-Quantum Hybrid Network Emulator)
 
-Welcome to the **Bio-Quantum Hybrid Network Emulator**, an implementation of the experimental QSP (Quantum Sensory Protocol) stack.
+ยินดีต้อนรับสู่ **The Bio-Quantum Hybrid Network Emulator** ซึ่งเป็นการจำลองระบบเครือข่ายทดลองด้วยโปรโตคอล QSP (Quantum Sensory Protocol)
 
-This project is a Python-based Network Emulator designed to simulate "Technical Reality" network transactions using localized Python sockets. Data is practically transmitted between distinct Node objects bound to unique localhost ports.
+โปรเจกต์นี้เป็นตัวจำลองเครือข่ายที่เขียนด้วยภาษา Python ซึ่งถูกออกแบบมาเพื่อจำลอง "Technical Reality" ของการส่งข้อมูลข้ามเครือข่าย โดยใช้ Python sockets ในเครื่อง (localhost) เพื่อส่งข้อมูลจริงๆ ระหว่าง Object ย่อย (Node) ที่ผูกกับพอร์ตแยกต่างหาก
 
-## Project Architecture
+## สถาปัตยกรรมของโปรเจกต์ (Project Architecture)
 
-This emulator implements the following theoretical layers:
+ตัวจำลองนี้ประกอบด้วยเลเยอร์ตามทฤษฎีดังนี้:
 
-1. **Layer 1 (Mycelium Topology)**: A mesh network topology (Nodes A through E) generated via `networkx`. Defines the graph and uses Slime Mold (Dijkstra) algorithm concepts for routing.
-2. **Layer 3 (Soul Sync & Psycho-Breaker)**: Authentication via dummy DNA/EEG verification, coupled with a dynamic "Psycho-Breaker". The system monitors pseudo-random Heart Rate Variability (HRV) and Cortisol limits for the connected "Avatar". If bounds are exceeded (e.g. HRV < 40), the node actively terminates the connection.
-3. **Layer 4 (Bio-Translation)**: Translates standard text payloads into 8-bit binary, and then encodes them into a 4-base DNA sequence (`A`, `C`, `G`, `T`). At the destination, the DNA sequence is decoded back to the original text.
+1. **Layer 1 (Mycelium Topology)**: โทโปโลยีเครือข่ายแบบ Mesh (Node A ถึง E) ที่สร้างขึ้นด้วยไลบรารี `networkx` มีการกำหนดกราฟเชื่อมต่อและใช้อัลกอริทึม Slime Mold (อิงจาก Dijkstra) ในการหาเส้นทางข้อมูล (Routing)
+2. **Layer 3 (Soul Sync & Psycho-Breaker)**: ระบบยืนยันตัวตนด้วยการตรวจสอบ DNA/EEG จำลอง พร้อมระบบตัดการเชื่อมต่ออัตโนมัติ "Psycho-Breaker" ระบบจะสุ่มระดับความแปรปรวนของการเต้นของหัวใจ (HRV) และคอร์ติซอล (Cortisol) ของ "Avatar" ที่เชื่อมต่ออยู่ หากค่าความเครียดหรือสภาพร่างกายเกินขีดจำกัด (เช่น HRV < 40) โหนดจะทำการตัดการเชื่อมต่อทิ้งทันที
+3. **Layer 4 (Bio-Translation)**: แปลงข้อความ (String) ปกติให้เป็นเลขฐานสอง (8-bit binary) และเข้ารหัสเป็นลำดับเบสดีเอ็นเอ 4 ตัว (`A`, `C`, `G`, `T`) จากนั้นเมื่อถึงปลายทาง ลำดับดีเอ็นเอจะถูกถอดรหัสกลับคืนเป็นข้อความที่อ่านได้ตามปกติ
 
-## Requirements
+## ความต้องการของระบบ (Requirements)
 
-The simulation requires Python 3.9+ and the `networkx` library.
+การรับชมการจำลองต้องใช้ Python 3.9+ และไลบรารี `networkx`
 
-Install dependencies using:
+ติดตั้ง dependencies ด้วยคำสั่ง:
 
 ```bash
 pip install -r requirements.txt
 ```
 
-## How to Run
+## วิธีการรันโปรแกรม (How to Run)
 
-Execute the simulation orchestration script from the terminal:
+รันสคริปต์หลักจากเทอร์มินัล:
 
 ```bash
 python main.py
 ```
 
-### What to Expect
+### สิ่งที่จะเกิดขึ้นเมื่อรันโปรแกรม
 
-When `main.py` is executed, the following sequence occurs automatically:
+เมื่อสั่งรัน `main.py` ลำดับการทำงานต่อไปนี้จะเกิดขึ้นโดยอัตโนมัติ:
 
-1. **Topology Generation**: The Mycelium mesh (`layer1_net.py`) maps the connections between Nodes A, B, C, D, and E.
-2. **Socket Initialization**: The driver instantiates 5 independent background threads, each binding a standard TCP Socket on localhost ports 5001 through 5005 (`node.py`).
-3. **Transmission**: Node A initiates a transfer of the string `"HELLO QUANTUM WORLD!"` targeting Node D.
-4. **Encoding**: Node A passes the payload through Layer 4 (`layer4_bio.py`), converting the text mathematically to a DNA string.
-5. **Routing & Hopping**: The packet is forwarded across the correct intermediate nodes (e.g., A -> B -> D). Each hop conducts a Layer 3 (`layer3_soul.py`) authentication and Psycho-Breaker check.
-6. **Delivery & Decoding**: If the connections aren't dropped by the Psycho-Breaker, the packet arrives at the destination port (Node D), decodes the DNA back to English text, and shuts the network down safely.
+1. **Topology Generation**: โครงข่าย Mycelium (`layer1_net.py`) จะสร้างการเชื่อมต่อระหว่าง Node A, B, C, D และ E
+2. **Socket Initialization**: สคริปต์จะสร้าง 5 พื้นหลัง (background threads) โดยแต่ละ Thread จะเปิด TCP Socket รอรับข้อมูลบนพอร์ต localhost ตั้งแต่ 5001 ถึง 5005 (`node.py`)
+3. **Transmission**: Node A เริ่มส่งข้อมูลข้อความ `"HELLO QUANTUM WORLD!"` ไปยังปลายทางคือ Node D
+4. **Encoding**: Node A จะส่งข้อความผ่าน Layer 4 (`layer4_bio.py`) เพื่อแปลงข้อความทางคณิตศาสตร์ให้กลายเป็นสายข้อมูลดีเอ็นเอ (DNA string)
+5. **Routing & Hopping**: แพ็กเก็ตข้อมูลจะถูกส่งต่อ (Forward) ไปยังโหนดทางผ่านตามเส้นทาง (เช่น A -> B -> D) ทุกๆ การส่งต่อ (Hop) จะต้องผ่านการตรวจสอบยืนยันตัวตนและเช็คขีดจำกัดทางชีววิทยาใน Layer 3 (`layer3_soul.py`) (Psycho-Breaker) ทุกครั้ง
+6. **Delivery & Decoding**: หากการเชื่อมต่อไม่ถูกบังคับตัดขัดจังหวะโดย Psycho-Breaker แพ็กเก็ตข้อมูลจะเดินทางจนถึงพอร์ตปลายทาง (Node D) ได้สำเร็จ จากนั้นจะทำการนำสายดีเอ็นเอมาถอดรหัสกลับเป็นข้อความภาษาอังกฤษ และสั่งปิดเครือข่ายอย่างปลอดภัย
 
-> **Note**: Because the Layer 3 Psycho-Breaker relies on *randomly generated* HRV and Cortisol metrics upon every packet hop, the simulation behavior **varies on each run**. In some runs, a packet drop (Emergency Logout) might occur mid-transit, cutting the connection. In other runs, it'll reach Node D perfectly. Simply run `python main.py` a few times to observe all the different behaviors!
+> **หมายเหตุ**: เนื่องจาก Layer 3 Psycho-Breaker อาศัยการ *สุ่มค่า* HRV และ Cortisol ใหม่ทุกครั้งที่มีการกระโดดของแพ็กเก็ตจำลอง ทำให้พฤติกรรมของการจำลองจะ **แตกต่างกันในทุกๆ ครั้งที่รันโปรแกรม** ในบางครั้ง แพ็กเก็ตอาจจะถูกทิ้งกลางสาย (Emergency Logout) ทำให้การเชื่อมต่อขาดสะบั้น และในอีกหลายๆ ครั้ง แพ็กเก็ตก็จะสามารถเดินทางถึง Node D ได้อย่างสมบูรณ์! คุณสามารถลองรัน `python main.py` หลายๆ ครั้งเพื่อสังเกตพฤติกรรมของเครือข่ายที่เปลี่ยนไป
 
-## File Structure
+## โครงสร้างไฟล์ (File Structure)
 
-- `main.py`: The simulation test driver.
-- `node.py`: The `Node` class providing multithreaded socket communication.
-- `layer1_net.py`: Infrastructure handling the `networkx` Mycelium mesh and routing.
-- `layer3_soul.py`: Security and biometric monitoring limits (Psycho-Breaker).
-- `layer4_bio.py`: Bio-Translation algorithms for DNA Data Encoding mechanisms.
-- `requirements.txt`: Python package requirements.
+- `main.py`: สคริปต์หลักสำหรับใช้ขับเคลื่อนการจำลองการส่งข้อมูล
+- `node.py`: คลาส `Node` สำหรับสร้างและจัดการ multi-thread socket communication
+- `layer1_net.py`: จัดการโครงสร้างพื้นฐาน Mycelium mesh (`networkx`) และการ Routing
+- `layer3_soul.py`: ฟังก์ชันระบบความปลอดภัยและตรวจสอบขีดจำกัดทางชีวภาพ (Psycho-Breaker)
+- `layer4_bio.py`: อัลกอริทึม Bio-Translation สำหรับการเข้ารหัสข้อมูลข้อความเป็นดีเอ็นเอ (DNA Data Encoding)
+- `requirements.txt`: ไฟล์ประกาศ Python package ที่จำเป็น

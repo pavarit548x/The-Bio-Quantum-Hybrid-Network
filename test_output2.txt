@@ -1,0 +1,40 @@
+[96m[23:05:47.956] [SYSTEM] ==================================================[0m
+[96m[23:05:47.957] [SYSTEM]    BIO-QUANTUM HYBRID NETWORK EMULATOR STARTED    [0m
+[96m[23:05:47.957] [SYSTEM] ==================================================[0m
+[96m[23:05:48.457] [SYSTEM] Initializing Layer 1: Mycelium Topology...[0m
+[92m[23:05:48.957] [SYSTEM] Mycelium Mesh Created. Nodes: ['A', 'B', 'C', 'D', 'E'][0m
+[96m[23:05:49.458] [SYSTEM] Network Port Configuration mapped.[0m
+[96m[23:05:49.458] [SYSTEM]     Node A -> localhost:5001[0m
+[96m[23:05:49.458] [SYSTEM]     Node B -> localhost:5002[0m
+[96m[23:05:49.458] [SYSTEM]     Node C -> localhost:5003[0m
+[96m[23:05:49.458] [SYSTEM]     Node D -> localhost:5004[0m
+[96m[23:05:49.458] [SYSTEM]     Node E -> localhost:5005[0m
+[96m[23:05:49.958] [SYSTEM] Spinning up Node socket listeners [Slime Mold Pathfinding Enabled]...[0m
+[96m[23:05:49.961] [Node A] Booted and listening on 127.0.0.1:5001...[0m
+[96m[23:05:50.062] [Node B] Booted and listening on 127.0.0.1:5002...[0m
+[96m[23:05:50.163] [Node C] Booted and listening on 127.0.0.1:5003...[0m
+[96m[23:05:50.264] [Node D] Booted and listening on 127.0.0.1:5004...[0m
+[96m[23:05:50.364] [Node E] Booted and listening on 127.0.0.1:5005...[0m
+
+[96m[23:05:51.465] [SYSTEM] Initiating Packet Transfer Sequence...[0m
+[96m[23:05:51.465] [Node A] ==================================================[0m
+[96m[23:05:51.465] [Node A] Initiating Transfer | Target: Node D[0m
+[96m[23:05:51.465] [Node A] 🗨️ Original Message: 'HELLO QUANTUM WORLD!'[0m
+[96m[23:05:51.965] [Node A] 🧬 Layer 4 Bio-Translation (Encoded DNA): CAGACACCCATACATACATTAGAACCACCCCCCAACCATGCCCACCCCCA...[0m
+[96m[23:05:51.968] [Node A] ➡️ Next hop computed: Node B. Forwarding...[0m
+[96m[23:05:52.670] [Node B] Packet Arrived | ETH_HEADER: [SRC: A -> DST: D] | TYPE: QSP_DNA[0m
+[96m[23:05:52.670] [Node B] Raw Payload: CAGACACCCATACATACATTAGAACCACCC...[0m
+[92m[23:05:52.670] [Node B] Layer 3 Checks Passed: Vitals OK (HRV: 86.6, Cort: 20.0)[0m
+[96m[23:05:52.670] [Node B] Not the destination. Computing Slime Mold path to 'D'...[0m
+[96m[23:05:52.670] [Node B] ➡️ Next hop computed: Node D. Forwarding...[0m
+[96m[23:05:53.372] [Node D] Packet Arrived | ETH_HEADER: [SRC: A -> DST: D] | TYPE: QSP_DNA[0m
+[96m[23:05:53.373] [Node D] Raw Payload: CAGACACCCATACATACATTAGAACCACCC...[0m
+[92m[23:05:53.373] [Node D] Layer 3 Checks Passed: Vitals OK (HRV: 89.7, Cort: 14.6)[0m
+[92m[23:05:53.373] [Node D] 🎯 Packet reached final destination! Initiating Bio-Translation...[0m
+[92m[23:05:53.973] [Node D] 🧬 Layer 4 Bio-Translation (Decoded): 'HELLO QUANTUM WORLD!'[0m
+[92m[23:05:53.973] [Node D] SUCCESS: Transmission Delivery Confirmed.[0m
+[92m[23:05:53.974] [Node A] ==================================================[0m
+[92m[23:05:53.974] [Node A] Transmission completed successfully.[0m
+
+[96m[23:05:54.974] [SYSTEM] Shutting down Bio-Quantum Network...[0m
+[92m[23:05:55.476] [SYSTEM] All nodes offline. Simulation complete.[0m
