@@ -148,44 +148,57 @@ class Node:
         src = packet['src']
         dst = packet['dst']
         dna_payload = packet['payload']
-        user_id = packet.get('user_id', 'quantum_user_1X')
+        scenario = packet.get('scenario', 'normal')
         
         # Simulated Network Transfer Time
         time.sleep(0.3)
         
         log(self.node_id, f"Packet Arrived | ETH_HEADER: [SRC: {src} -> DST: {dst}] | TYPE: QSP_DNA", CYAN)
         log(self.node_id, f"Raw Payload: {dna_payload[:30]}...", CYAN)
-        
-        scenario = packet.get('scenario', 'normal')
-        attempt = packet.get('attempt', 1)
+
+        # --- Layer 1: Simulated Hardware Failure (For Scenario 2) ---
         dead_nodes = packet.get('dead_nodes', [])
         
-        # 0. Layer 1 Decoherence Check (Simulation)
-        if scenario == 'reroute' and self.node_id == 'B':
-            if attempt == 1 and self.node_id not in dead_nodes:
-                log(self.node_id, f"[Layer 1] DECOHERENCE DETECTED: Node {self.node_id} is dead/unreachable.", RED)
-                return False
-        
-        force_fail = False
-        force_safe = False
-        
-        if scenario == 'happy':
-            force_safe = True
-        elif scenario == 'reroute':
-            force_safe = True
-        elif scenario == 'crisis':
-            # Force fail on the first node it hits to simulate immediate bio-rejection
-            force_fail = True
-        
-        # 1. Layer 3 Security Check
-        if not self._process_layer3_security(force_fail, force_safe):
+        # 1. ป้องกัน Zombie Node
+        if self.node_id in dead_nodes:
+            log(self.node_id, "👻 [ZOMBIE NODE DETECTED] Ignoring packet. This node is supposed to be dead!", RED)
             return False
 
-        # 2. Process Destination Layers or Route Forward
+        # 2. จำลองโหนด B พังเฉพาะใน Scenario Reroute
+        if scenario == 'reroute' and self.node_id == 'B' and 'B' not in dead_nodes:
+            log(self.node_id, "💥 [Layer 1] DECOHERENCE DETECTED: Node B hardware failure/unreachable.", RED)
+            return False # ตัดการเชื่อมต่อทันที ไม่ต้องไปเช็ค Layer 3
+        
+        # --- Layer 3: Psycho-Breaker (For Scenario 3) ---
+        # บังคับให้เกิดวิกฤตเฉพาะใน scenario 'crisis' เท่านั้น
+        force_fail = (scenario == 'crisis')
+        force_safe = (scenario in ['happy', 'reroute'])
+        
+        is_safe, reason = check_psycho_breaker(force_fail=force_fail, force_safe=force_safe)
+        if not is_safe:
+            log(self.node_id, f"🚨 EMERGENCY LOGOUT! {reason}. Connection cut via Psycho-Breaker.", RED)
+            return False
+            
+        log(self.node_id, f"Layer 3 Checks Passed: {reason}", GREEN)
+
+        # Check if this node is the final destination
         if self.node_id == dst:
-            return self._process_destination_layers(dna_payload)
+            log(self.node_id, "🎯 Packet reached final destination! Initiating Bio-Translation...", GREEN)
+            time.sleep(0.6)
+            
+            # --- Layer 4: Decoding ---
+            original_msg = decode_dna_to_message(dna_payload)
+            log(self.node_id, f"🧬 Layer 4 Bio-Translation (Decoded): '{original_msg}'", GREEN)
+            
+            time.sleep(0.5)
+            # --- Layer 5: Neural Interface ---
+            log(self.node_id, "🧠 [Layer 5] Direct Cortical Stimulation active. Delivering data to Visual Cortex...", GREEN)
+            log(self.node_id, f"SUCCESS: Transmission Delivery Confirmed.", GREEN)
+            return True
         else:
-            return self._process_routing_and_forwarding(dst, packet)
+            # Routing: We must forward it
+            log(self.node_id, f"Not the destination. Computing Slime Mold path to '{dst}'...", CYAN)
+            return self.route_and_forward(dst, packet)
 
     def route_and_forward(self, dst: str, packet: dict) -> bool:
         """Finds a path, attempts to forward, and dynamically re-routes if the next hop fails."""
@@ -216,6 +229,11 @@ class Node:
                 # Upstream node accepted and successfully handled/routed the packet
                 return True
             else:
+                # ถ้าเป็นวิกฤต Psycho-Breaker ห้าม Reroute! ให้หยุดส่งทันที
+                if packet.get('scenario') == 'crisis':
+                    log(self.node_id, "🛑 [Layer 3] SYSTEM ABORT: Psycho-Breaker สั่งระงับการ Re-route และยกเลิกการส่งข้อมูล!", RED)
+                    return False
+                
                 # Upstream node failed (Psycho-breaker triggered, or node dead)
                 log(self.node_id, f"Connection to {next_hop} refused or timed out. Triggering Slime Mold Re-routing...", YELLOW)
                 # Temporarily remove the dead/rejected node from local topology
