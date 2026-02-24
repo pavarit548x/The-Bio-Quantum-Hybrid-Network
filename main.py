@@ -2,8 +2,8 @@ import time
 import datetime
 import sys
 import os
-from layer1_net import build_mycelium_topology, get_routing_path
-from node import Node, GREEN, RED, CYAN, YELLOW, RESET
+from src.layer1_net import build_mycelium_topology, get_routing_path
+from src.node import Node, GREEN, RED, CYAN, YELLOW, RESET
 import networkx as nx
 
 def log_main(msg, color=RESET):

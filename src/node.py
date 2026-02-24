@@ -4,9 +4,9 @@ import json
 import time
 import datetime
 import networkx as nx
-from layer4_bio import encode_message_to_dna, decode_dna_to_message
-from layer3_soul import verify_soul_id, check_psycho_breaker
-from layer1_net import get_routing_path
+from src.layer4_bio import encode_message_to_dna, decode_dna_to_message
+from src.layer3_soul import verify_soul_id, check_psycho_breaker
+from src.layer1_net import get_routing_path
 
 GREEN = "\033[92m"
 RED = "\033[91m"
