@@ -16,6 +16,14 @@ This project simulates a "Technical Reality" of network data transmission. Inste
 
 ---
 
+## Technical Improvements
+
+- **Message Framing**: The socket communication between nodes strictly implements Length-Prefix message framing (4-byte header) to guarantee safety from TCP Stream Fragmentation during rapid bio-data burst transmissions.
+- **Architectural Separation of Concerns**: Packet processing strictly enforces separation of logic between Layer 3 (Security), Layer 4 (Bio-Translation), Layer 5 (Neural Interface) and Layer 1 (Routing), delegating responsibilities cleanly across the protocol stack.
+- **Graceful Shutdown**: The multithreaded daemon listeners gracefully handle timeout exceptions during session exits, clearing resources cleanly without relying on dummy socket connections.
+
+---
+
 ## Prerequisites
 
 - **Python 3.9** or higher.

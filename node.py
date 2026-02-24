@@ -46,32 +46,50 @@ class Node:
     def stop(self):
         self.running = False
         try:
-            # Send a dummy connection to unblock accept()
-            dummy = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-            dummy.connect((self.host, self.port))
-            dummy.close()
+            self.server_socket.close()
         except:
             pass
-        self.server_socket.close()
 
     def listen(self):
         """Background thread loop to accept incoming connections."""
+        self.server_socket.settimeout(1.0)
         while self.running:
             try:
                 conn, addr = self.server_socket.accept()
                 if not self.running:
                     break
+                conn.settimeout(None)
                 threading.Thread(target=self.handle_client, args=(conn,), daemon=True).start()
+            except socket.timeout:
+                continue
             except BaseException:
                 break
+
+    def _recvall(self, conn: socket.socket, n: int) -> bytearray:
+        """Helper to read exactly n bytes from a socket."""
+        data = bytearray()
+        while len(data) < n:
+            packet = conn.recv(n - len(data))
+            if not packet:
+                return None
+            data.extend(packet)
+        return data
 
     def handle_client(self, conn: socket.socket):
         """Handles an incoming packet over the wire."""
         try:
-            data = conn.recv(4096).decode('utf-8')
-            if not data:
+            # Read the 4-byte length prefix
+            raw_msglen = self._recvall(conn, 4)
+            if not raw_msglen:
+                return
+            msglen = int.from_bytes(raw_msglen, 'big')
+            
+            # Read the actual JSON data
+            data_bytes = self._recvall(conn, msglen)
+            if not data_bytes:
                 return
             
+            data = data_bytes.decode('utf-8')
             packet = json.loads(data)
             
             if packet.get('action') == 'stop':
@@ -91,6 +109,40 @@ class Node:
         finally:
             conn.close()
 
+    def _process_layer3_security(self, force_fail: bool, force_safe: bool) -> bool:
+        """Handles Layer 3 Psycho-Breaker security and physiological checks."""
+        is_safe, reason = check_psycho_breaker(force_fail=force_fail, force_safe=force_safe)
+        if not is_safe:
+            log(self.node_id, f"EMERGENCY LOGOUT! {reason}. Connection cut via Psycho-Breaker.", RED)
+            return False
+            
+        log(self.node_id, f"Layer 3 Checks Passed: {reason}", GREEN)
+        return True
+
+    def _process_destination_layers(self, dna_payload: str) -> bool:
+        """Handles Layer 4 Bio-Translation and Layer 5 Neural Interface when payload reaches destination."""
+        log(self.node_id, "🎯 Packet reached final destination! Initiating Bio-Translation...", GREEN)
+        
+        # Simulated Decoding Time
+        time.sleep(0.6)
+        
+        # --- Layer 4: Decoding ---
+        original_msg = decode_dna_to_message(dna_payload)
+        log(self.node_id, f"🧬 Layer 4 Bio-Translation (Decoded): '{original_msg}'", GREEN)
+        
+        # Simulated Layer 5 Delay
+        time.sleep(0.5)
+        # --- Layer 5: Neural Interface ---
+        log(self.node_id, "🧠 [Layer 5] Direct Cortical Stimulation active. Delivering data to Visual Cortex...", GREEN)
+        
+        log(self.node_id, f"SUCCESS: Transmission Delivery Confirmed.", GREEN)
+        return True
+
+    def _process_routing_and_forwarding(self, dst: str, packet: dict) -> bool:
+        """Handles Layer 1 routing logic and Slime Mold path calculation."""
+        log(self.node_id, f"Not the destination. Computing Slime Mold path to '{dst}'...", CYAN)
+        return self.route_and_forward(dst, packet)
+
     def process_packet(self, packet: dict) -> bool:
         """Processes the Layer 3 checks, routing, and Layer 4 decoding. Returns success status."""
         src = packet['src']
@@ -106,6 +158,13 @@ class Node:
         
         scenario = packet.get('scenario', 'normal')
         attempt = packet.get('attempt', 1)
+        dead_nodes = packet.get('dead_nodes', [])
+        
+        # 0. Layer 1 Decoherence Check (Simulation)
+        if scenario == 'reroute' and self.node_id == 'B':
+            if attempt == 1 and self.node_id not in dead_nodes:
+                log(self.node_id, f"[Layer 1] DECOHERENCE DETECTED: Node {self.node_id} is dead/unreachable.", RED)
+                return False
         
         force_fail = False
         force_safe = False
@@ -113,48 +172,30 @@ class Node:
         if scenario == 'happy':
             force_safe = True
         elif scenario == 'reroute':
-            if self.node_id == 'B' and attempt == 1:
-                force_fail = True
-            else:
-                force_safe = True
+            force_safe = True
         elif scenario == 'crisis':
             # Force fail on the first node it hits to simulate immediate bio-rejection
             force_fail = True
         
-        # --- Layer 3: Psycho-Breaker ---
-        is_safe, reason = check_psycho_breaker(force_fail=force_fail, force_safe=force_safe)
-        if not is_safe:
-            log(self.node_id, f"EMERGENCY LOGOUT! {reason}. Connection cut via Psycho-Breaker.", RED)
+        # 1. Layer 3 Security Check
+        if not self._process_layer3_security(force_fail, force_safe):
             return False
-            
-        log(self.node_id, f"Layer 3 Checks Passed: {reason}", GREEN)
 
-        # Check if this node is the final destination
+        # 2. Process Destination Layers or Route Forward
         if self.node_id == dst:
-            log(self.node_id, "🎯 Packet reached final destination! Initiating Bio-Translation...", GREEN)
-            
-            # Simulated Decoding Time
-            time.sleep(0.6)
-            
-            # --- Layer 4: Decoding ---
-            original_msg = decode_dna_to_message(dna_payload)
-            log(self.node_id, f"🧬 Layer 4 Bio-Translation (Decoded): '{original_msg}'", GREEN)
-            
-            # Simulated Layer 5 Delay
-            time.sleep(0.5)
-            # --- Layer 5: Neural Interface ---
-            log(self.node_id, "🧠 [Layer 5] Direct Cortical Stimulation active. Delivering data to Visual Cortex...", GREEN)
-            
-            log(self.node_id, f"SUCCESS: Transmission Delivery Confirmed.", GREEN)
-            return True
+            return self._process_destination_layers(dna_payload)
         else:
-            # Routing: We must forward it
-            log(self.node_id, f"Not the destination. Computing Slime Mold path to '{dst}'...", CYAN)
-            return self.route_and_forward(dst, packet)
+            return self._process_routing_and_forwarding(dst, packet)
 
     def route_and_forward(self, dst: str, packet: dict) -> bool:
         """Finds a path, attempts to forward, and dynamically re-routes if the next hop fails."""
         while True:
+            # Synchronize dead nodes from packet memory
+            dead_nodes = packet.get('dead_nodes', [])
+            for dn in dead_nodes:
+                if self.topology.has_node(dn):
+                    self.topology.remove_node(dn)
+
             # Calculate shortest path based on current local view of topology
             path = get_routing_path(self.topology, self.node_id, dst)
             if not path or len(path) < 2:
@@ -181,6 +222,12 @@ class Node:
                 if self.topology.has_node(next_hop):
                     self.topology.remove_node(next_hop)
                 
+                # Update packet with dead node to inform future hops
+                dead_nodes = packet.get('dead_nodes', [])
+                if next_hop not in dead_nodes:
+                    dead_nodes.append(next_hop)
+                packet['dead_nodes'] = dead_nodes
+                
                 # Increment attempt parameter to force logic
                 packet['attempt'] = packet.get('attempt', 1) + 1
                 
@@ -193,7 +240,12 @@ class Node:
              s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
              s.settimeout(10.0)
              s.connect((self.host, target_port))
-             s.sendall(json.dumps(packet).encode('utf-8'))
+             
+             # Apply Length-Prefix Framing
+             msg_data = json.dumps(packet).encode('utf-8')
+             msg_length = len(msg_data)
+             s.sendall(msg_length.to_bytes(4, 'big') + msg_data)
+             
              response = s.recv(1024).decode('utf-8')
              s.close()
              if response == 'ACK':
@@ -223,7 +275,8 @@ class Node:
             'payload': dna_payload,
             'user_id': 'quantum_user_1X',
             'attempt': 1,
-            'scenario': scenario
+            'scenario': scenario,
+            'dead_nodes': []
         }
         
         success = self.route_and_forward(dst, packet)
