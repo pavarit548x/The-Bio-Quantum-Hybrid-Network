@@ -18,9 +18,28 @@ This project simulates a "Technical Reality" of network data transmission. Inste
 
 ## Technical Improvements
 
+- **Realistic Simulation & Logging**: Employs real-time Wireshark-style ANSI colored logging with precise milliseconds timestamps, and asynchronous delays (`time.sleep`) to simulate real-world propagation and biological processing times dynamically.
+- **Dynamic Slime Mold Self-Healing**: Hardware node failure instantly triggers real-time recalculation of paths, forwarding via backup routes dynamically to ensure zero-downtime message delivery.
 - **Message Framing**: The socket communication between nodes strictly implements Length-Prefix message framing (4-byte header) to guarantee safety from TCP Stream Fragmentation during rapid bio-data burst transmissions.
-- **Architectural Separation of Concerns**: Packet processing strictly enforces separation of logic between Layer 3 (Security), Layer 4 (Bio-Translation), Layer 5 (Neural Interface) and Layer 1 (Routing), delegating responsibilities cleanly across the protocol stack.
+- **Architectural Modularity**: The project cleanly encapsulates QSP logic across `src/`, `docs/`, and `logs/`, enforcing separation of concerns between Layer 3 (Security), Layer 4 (Bio-Translation), Layer 5 (Neural Interface) and Layer 1 (Routing).
 - **Graceful Shutdown**: The multithreaded daemon listeners gracefully handle timeout exceptions during session exits, clearing resources cleanly without relying on dummy socket connections.
+
+---
+
+## Project Structure
+
+```
+├── main.py             # Interactive CLI entry point and simulation runner
+├── requirements.txt    # Python dependencies
+├── src/                # Core QSP protocol and routing logic
+│   ├── layer1_net.py   # Mycelium topology and shortest-path routing
+│   ├── layer3_soul.py  # Soul Sync & Psycho-Breaker monitoring
+│   ├── layer4_bio.py   # DNA to Binary translation and encoding
+│   └── node.py         # Multi-threaded concurrent network node
+├── docs/               # Architecture specs and planning documents
+├── logs/               # Output execution logs (if applicable)
+└── test_core.py        # Comprehensive isolated unit tests
+```
 
 ---
 
@@ -31,6 +50,14 @@ This project simulates a "Technical Reality" of network data transmission. Inste
 
 ```bash
 pip install -r requirements.txt
+```
+
+### Running Unit Tests
+
+The emulator includes isolated unit tests ensuring zero side-effects across all QSP layers. To validate logic integrity:
+
+```bash
+python -m unittest test_core.py
 ```
 
 ---
@@ -47,9 +74,9 @@ python main.py
 
 Once the script boots, you will be presented with the following options:
 
-- **[1] Run Standard 5-Layer Simulation (Happy Path)**: Executes the full network transmission safely. Assumes all vitals are perfectly stable and traces the standard pathing through to Layer 5.
-- **[2] Simulate Node Failure / Decoherence**: Forcefully causes the primary routing node to suffer an Emergency Logout due to Cortisol Spikes. The simulation recovers utilizing **Slime Mold Zero-Downtime Re-routing**; it automatically purges the dead node from the local topology, calculates an alternate path, and successfully delivers the packet.
-- **[3] Simulate Psycho-Breaker Crisis**: Simulates a catastrophic biological failure at the entry node. HRV spikes force an immediate drop, rejecting the transmission completely across the array.
+- **[1] Run Standard 5-Layer Simulation (Happy Path - Zero-Latency)**: Executes the full network transmission safely. Assumes all vitals are perfectly stable and traces the standard pathing through to Layer 5.
+- **[2] Simulate Node Failure / Decoherence (Demonstrate Slime Mold Rerouting)**: Forcefully causes the primary routing node to suffer sudden hardware failure or decoherence. The simulation recovers utilizing **Slime Mold Zero-Downtime Re-routing**; it automatically purges the dead node from the local topology, calculates an alternate path, and successfully delivers the packet. *(Note: This failure occurs at Layer 1 due to decoherence, independent of biological vitals).*
+- **[3] Simulate Psycho-Breaker Crisis (Demonstrate HRV Spike & Force Logout)**: Simulates a catastrophic biological failure at the entry node. Unusual physiological readings (e.g., Cortisol/HRV spikes) force an immediate Layer 3 emergency drop, actively refusing to re-route and rejecting the transmission completely across the array.
 - **[4] View Current Mycelium Topology**: Prints out the live node connections defined in the NetworkX array.
 - **[5] Exit Emulator**: Safely closes the session.
 
