@@ -1,4 +1,5 @@
 import random
+import time
 
 class PsychoBreaker:
     """Manages physiological safety of the user session."""
@@ -37,12 +38,19 @@ class SoulSync:
             
             is_safe, reason = self.psycho_breaker.check(force_fail=force_fail, force_safe=force_safe)
             if not is_safe:
-                self.log(self.node_id, f"🚨 [Layer 3] EMERGENCY LOGOUT! {reason}. Connection cut via Psycho-Breaker.", "\033[91m")
-                if scenario == 'crisis':
-                    self.log(self.node_id, "🛑 [Layer 3] SYSTEM ABORT: Psycho-Breaker สั่งระงับการ Re-route และยกเลิกการส่งข้อมูล!", "\033[91m")
+                alert = (
+                    f"\n\033[91m"
+                    f"  [ ! ] ================================================ [ ! ]\n"
+                    f"  [ ! ] SYSTEM ABORT: {reason.upper():<30} [ ! ]\n"
+                    f"  [ ! ] EMERGENCY LOGOUT: CONNECTION SEVERED             [ ! ]\n"
+                    f"  [ ! ] ================================================ [ ! ]\n"
+                    f"\033[0m"
+                )
+                print(alert)
+                time.sleep(0.5)
                 return False
                 
-            self.log(self.node_id, f"🛡️ [Layer 3] Checks Passed: {reason}", "\033[92m")
+            self.log(self.node_id, f"[+] [Layer 3] Checks Passed: {reason}", "\033[92m")
             
             if event == "INTERMEDIATE_NODE_CHECK":
                 return True

@@ -103,13 +103,35 @@ def run_simulation_scenario(scenario: str):
     log_main("All local simulation nodes offline. Scenario complete.", GREEN)
 
 def print_topology():
-    print("\n" + "="*60)
-    log_main("CURRENT MYCELIUM TOPOLOGY:", CYAN)
+    print("\n" + CYAN + "="*60 + RESET)
+    print(f"{CYAN}>> INITIALIZING MYCELIUM TOPOLOGY SCAN...{RESET}")
+    time.sleep(0.5)
+    print(f"{CYAN}>> ESTABLISHING SECURE UPLINK... OK{RESET}")
+    time.sleep(0.5)
+    print(CYAN + "="*60 + RESET)
+    
     topology = build_mycelium_topology()
+    
+    ascii_topo = f"""
+{GREEN}       [ NODE A ]{RESET} ====== (1) ====== {GREEN}[ NODE B ]{RESET}
+           ||                           ||
+          (2)                          (2)
+           ||                           ||
+{GREEN}       [ NODE C ]{RESET} ====== (1) ====== {GREEN}[ NODE D ]{RESET}
+           \\                            /
+           (3)                        (1)
+             \\                        /
+              ====== {GREEN}[ NODE E ]{RESET} ======
+    """
+    print(ascii_topo)
+    
+    print(f"{CYAN}--- ROUTING METRICS ---{RESET}")
     for node in topology.nodes:
         neighbors = list(topology.neighbors(node))
-        log_main(f"Node {node} is connected to: {neighbors}", GREEN)
-    print("="*60 + "\n")
+        print(f" [*] {GREEN}NODE {node}{RESET} {CYAN}UP{RESET} | Links: {', '.join(neighbors)}")
+        time.sleep(0.1)
+    
+    print(CYAN + "="*60 + RESET + "\n")
 
 def main():
     while True:

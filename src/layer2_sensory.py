@@ -24,7 +24,7 @@ class SensoryStream:
         elif event == "INTERMEDIATE_NODE_CHECK":
             return self.upper_layer.indicate("INTERMEDIATE_NODE_CHECK", data)
         elif event == "APPLY_QOS":
-            self.log(self.node_id, "📥 [Layer 2] Buffering burst payload...", "\033[94m") # Blue
+            self.log(self.node_id, "[*] [Layer 2] Buffering burst payload...", "\033[94m") # Blue
             
             # Simulate placing payload size in buffer
             # Normally we'd take the data payload length, but data is empty dict here from layer 1
@@ -37,8 +37,8 @@ class SensoryStream:
             # Mathematical smoothing simulation (Jitter < 5ms)
             time.sleep(0.4) # Simulate strict stabilization duration
             
-            self.log(self.node_id, f"🌊 [Layer 2] Applying Interpolation. Jitter stabilized to 0.1ms. Variance: {variance:.3f}", "\033[96m") # Cyan
-            self.log(self.node_id, "✨ [Layer 2] Fluidic Stream converted to Continuous Wave. Proceeding.", "\033[96m")
+            self.log(self.node_id, f"[i] [Layer 2] Stream ~_~_~_~ Jitter smoothed to 0.1ms. Var: {variance:.3f}", "\033[96m") # Cyan
+            self.log(self.node_id, "[+] [Layer 2] Fluidic Stream converted to Continuous Wave. Proceeding.", "\033[96m")
             
             # Release buffer
             if len(self.buffer) > 0:

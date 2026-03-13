@@ -19,8 +19,15 @@ class BioTranslation:
         if service == "ENCODE_AND_SEND":
             msg = parameters.get("message")
             dna = self._encode(msg)
-            self.log(self.node_id, f"🧬 [Layer 4] RS ECC Applied. DNA length extended.", "\033[93m")
-            self.log(self.node_id, f"🧬 [Layer 4] Bio-Translation (Encoded DNA): {dna[:50]}...", "\033[96m")
+            self.log(self.node_id, f"[i] [Layer 4] RS ECC Applied. DNA length extended.", "\033[93m")
+            
+            dna_display = ""
+            for i in range(0, min(len(dna), 64), 16):
+                chunk = dna[i:i+16]
+                colored = chunk.replace('A', '\033[91mA\033[96m').replace('T', '\033[92mT\033[96m').replace('C', '\033[93mC\033[96m').replace('G', '\033[94mG\033[96m')
+                dna_display += f"        [DNA-BLOCK {idx:02X}0] {colored}\n" if 'idx' in locals() else f"        [DNA-BLOCK {i//16:02X}0] {colored}\n"
+            
+            self.log(self.node_id, f"[i] [Layer 4] Bio-Translation (Encoded DNA):\n{dna_display.rstrip()}\033[0m", "\033[96m")
             self.lower_layer.request("SECURE_AND_SEND", {
                 "dna_payload": dna,
                 "dst": parameters.get("dst"),
@@ -38,10 +45,10 @@ class BioTranslation:
             message = self._decode(dna)
             
             if message:
-                self.log(self.node_id, f"🧬 [Layer 4] Bio-Translation (Decoded): '{message}'", "\033[92m")
+                self.log(self.node_id, f"[SUCCESS] [Layer 4] Bio-Translation (Decoded): '{message}'", "\033[92m")
                 return self.upper_layer.indicate("MESSAGE_ASSEMBLED", {"message": message})
             else:
-                self.log(self.node_id, f"💥 [Layer 4] CRITICAL: Decoded message is corrupted beyond RS recovery.", "\033[91m")
+                self.log(self.node_id, f"[CRITICAL] [Layer 4] Decoded message is corrupted beyond RS recovery.", "\033[91m")
                 return False
             
     def confirm(self, status: str, result: dict):
@@ -51,7 +58,7 @@ class BioTranslation:
     def check_mutation(self, dna_sequence: str, scenario: str) -> str:
         """Simulates DNA mutation (Base Substitution Check) during transmission."""
         if scenario == 'reroute' and random.random() < 0.5: # 50% chance of mutation in reroute path
-            self.log(self.node_id, f"⚠️ [Layer 4] WARNING: BSC detected structural DNA mutation (Radiation/Decoherence).", "\033[93m")
+            self.log(self.node_id, f"[WARN] [Layer 4] BSC detected structural DNA mutation (Radiation/Decoherence).", "\033[93m")
             # Flip a random base
             idx = random.randint(0, len(dna_sequence) - 1)
             bases = ['A', 'C', 'G', 'T']
@@ -82,9 +89,9 @@ class BioTranslation:
             # RS Decoder automatically fixes errors if within limit
             decoded_message, decoded_message_with_ecc, err_positions = self.rsc.decode(encoded_bytes)
             if len(err_positions) > 0:
-                 self.log(self.node_id, f"🛠️ [Layer 4] RS Decoder successfully corrected {len(err_positions)} byte errors.", "\033[92m")
+                 self.log(self.node_id, f"[+] [Layer 4] RS Decoder successfully corrected {len(err_positions)} byte errors.", "\033[92m")
             # RSCodec returns the decoded message as bytearray
             return decoded_message.decode('utf-8', errors='ignore')
         except Exception as e:
-            self.log(self.node_id, f"❌ [Layer 4] RS Decode Failure: {e}", "\033[91m")
+            self.log(self.node_id, f"[X] [Layer 4] RS Decode Failure: {e}", "\033[91m")
             return None

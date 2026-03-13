@@ -18,7 +18,7 @@ class NeuralInterface:
             
             self.log(self.node_id, "==================================================", "\033[96m")
             self.log(self.node_id, f"Initiating Transfer | Target: Node {dst} | Scenario: {scenario.upper()}", "\033[96m")
-            self.log(self.node_id, f"🗨️ Original Message: '{msg}'", "\033[96m")
+            self.log(self.node_id, f"[i] Original Message: '{msg}'", "\033[96m")
             
             time.sleep(0.5)
             self.lower_layer.request("ENCODE_AND_SEND", parameters)
@@ -26,7 +26,7 @@ class NeuralInterface:
     def indicate(self, event: str, data: dict):
         if event == "MESSAGE_ASSEMBLED":
             time.sleep(0.5)
-            self.log(self.node_id, "🧠 [Layer 5] Direct Cortical Stimulation active. Delivering data to Visual Cortex...", "\033[92m")
+            self.log(self.node_id, "[>] [Layer 5] Direct Cortical Stimulation active. Delivering data to Visual Cortex...", "\033[92m")
             self.log(self.node_id, "SUCCESS: Transmission Delivery Confirmed.", "\033[92m")
             self.log(self.node_id, "==================================================", "\033[92m")
             return True

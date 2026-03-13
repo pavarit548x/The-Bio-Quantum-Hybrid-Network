@@ -20,10 +20,10 @@ class DecoherenceTracker:
         self.entanglement_states[peer] = max(0.0, current - decay)
         
     def refresh_entanglement(self, peer: str):
-        self.log(self.node_id, f"💥 [Layer 1] CRITICAL: Decoherence too high. Triggering Quantum Refresh with Node {peer}...", "\033[95m")
+        self.log(self.node_id, f"[CRITICAL] [Layer 1] Decoherence too high. Triggering Quantum Refresh with Node {peer}...", "\033[95m")
         time.sleep(0.5) # Simulate time taken to re-establish entanglement
         self.entanglement_states[peer] = 1.0
-        self.log(self.node_id, f"✨ [Layer 1] Entanglement restored to 1.0 with Node {peer}", "\033[96m")
+        self.log(self.node_id, f"[+] [Layer 1] Entanglement restored to 1.0 with Node {peer}", "\033[96m")
 
 
 def build_mycelium_topology() -> nx.Graph:
@@ -88,19 +88,28 @@ class QuantumSubstrate:
             dead_nodes = packet.get('dead_nodes', [])
             
             time.sleep(0.3)
-            self.log(self.node_id, f"📦 [Layer 1] Packet Arrived | ETH_HEADER: [SRC: {src} -> DST: {dst}]", "\033[96m")
+            print() # Add spacing
+            self.log(self.node_id, f"[*] [Layer 1] Packet Arrived | ETH_HEADER: [SRC: {src} -> DST: {dst}]", "\033[96m")
             
             # Simulated Hardware Failure (Decoherence)
             if self.node_id in dead_nodes:
-                self.log(self.node_id, "👻 [ZOMBIE NODE DETECTED] Ignoring packet. This node is supposed to be dead!", "\033[91m")
+                self.log(self.node_id, "[WARN] [ZOMBIE NODE DETECTED] Ignoring packet. This node is supposed to be dead!", "\033[91m")
                 return False
 
             if scenario == 'reroute' and self.node_id == 'B' and 'B' not in dead_nodes:
-                self.log(self.node_id, "💥 [Layer 1] DECOHERENCE DETECTED: Node B hardware failure/unreachable.", "\033[91m")
+                alert = (
+                    f"\n\033[91m"
+                    f"  [ ! ] ================================================ [ ! ]\n"
+                    f"  [ ! ] SYSTEM ABORT: CRITICAL DECOHERENCE IN NODE B     [ ! ]\n"
+                    f"  [ ! ] ================================================ [ ! ]\n"
+                    f"\033[0m"
+                )
+                print(alert)
+                time.sleep(0.5)
                 return False
                 
             if self.node_id == dst:
-                self.log(self.node_id, "🎯 Packet reached final destination! Forwarding up the stack...", "\033[92m")
+                self.log(self.node_id, "[SUCCESS] Packet reached final destination! Forwarding up the stack...", "\033[92m")
                 return self.upper_layer.indicate("PACKET_RX", {"dna_payload": dna_payload, "scenario": scenario})
             else:
                 self.log(self.node_id, f"Not the destination. Computing Slime Mold path to '{dst}'...", "\033[96m")
@@ -129,12 +138,18 @@ class QuantumSubstrate:
             self.decoherence.apply_decay(next_hop, edge_weight)
             quality = self.decoherence.get_quality(next_hop)
             
+            blocks = int(quality * 10)
+            gauge = "█" * blocks + "░" * (10 - blocks)
+            
             if quality <= 0.85:
-                 self.log(self.node_id, f"⚠️ [Layer 1] Entanglement Quality dropped to {quality:.2f}", "\033[93m")
+                 self.log(self.node_id, f"[WARN] [Layer 1] Entanglement Quality [{gauge}] {quality:.2f}", "\033[93m")
                  self.decoherence.refresh_entanglement(next_hop)
                  quality = 1.0
+                 blocks = 10
+                 gauge = "█" * 10
             
-            self.log(self.node_id, f"➡️ [Layer 1] Entanglement Quality at {quality:.2f}... transmitting to {next_hop}.", "\033[96m")
+            self.log(self.node_id, f"[>] [Layer 1] Entanglement Quality [{gauge}] {quality:.2f} ... transmitting to Node {next_hop}.", "\033[96m")
+            print() # Visual spacing for hops
             
             # Apply QoS from Layer 2
             self.upper_layer.indicate("APPLY_QOS", {})
