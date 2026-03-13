@@ -34,7 +34,7 @@ class SoulSync:
         if event in ["PACKET_RX", "INTERMEDIATE_NODE_CHECK"]:
             scenario = data.get("scenario", "normal")
             force_fail = (scenario == 'crisis')
-            force_safe = (scenario in ['happy', 'reroute'])
+            force_safe = (scenario in ['happy', 'reroute', 'mutate'])
             
             is_safe, reason = self.psycho_breaker.check(force_fail=force_fail, force_safe=force_safe)
             if not is_safe:

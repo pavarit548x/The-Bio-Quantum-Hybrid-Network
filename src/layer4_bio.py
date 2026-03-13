@@ -57,13 +57,21 @@ class BioTranslation:
 
     def check_mutation(self, dna_sequence: str, scenario: str) -> str:
         """Simulates DNA mutation (Base Substitution Check) during transmission."""
-        if scenario == 'reroute' and random.random() < 0.5: # 50% chance of mutation in reroute path
+        if (scenario == 'reroute' and random.random() < 0.5) or scenario == 'mutate': 
             self.log(self.node_id, f"[WARN] [Layer 4] BSC detected structural DNA mutation (Radiation/Decoherence).", "\033[93m")
             # Flip a random base
             idx = random.randint(0, len(dna_sequence) - 1)
             bases = ['A', 'C', 'G', 'T']
             bases.remove(dna_sequence[idx])
             mutated_dna = dna_sequence[:idx] + random.choice(bases) + dna_sequence[idx+1:]
+            
+            if scenario == 'mutate':
+                # Force a second mutation for emphasis
+                idx2 = random.randint(0, len(mutated_dna) - 1)
+                bases2 = ['A', 'C', 'G', 'T']
+                bases2.remove(mutated_dna[idx2])
+                mutated_dna = mutated_dna[:idx2] + random.choice(bases2) + mutated_dna[idx2+1:]
+                
             return mutated_dna
         return dna_sequence
 

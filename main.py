@@ -31,7 +31,7 @@ def print_header():
 """
     print(CYAN + ascii_art + RESET)
 
-def run_simulation_scenario(scenario: str):
+def run_simulation_scenario(scenario: str, custom_message: str = None):
     print("\n" + "="*60)
     log_main(f"INITIALIZING SCENARIO: {scenario.upper()}", CYAN)
     print("="*60 + "\n")
@@ -77,7 +77,7 @@ def run_simulation_scenario(scenario: str):
     
     src_node_id = 'A'
     dst_node_id = 'D'
-    message = "HELLO QUANTUM WORLD!"
+    message = custom_message if custom_message else "HELLO QUANTUM WORLD!"
         
     print()
     log_main("Initiating Packet Transfer Sequence...", CYAN)
@@ -141,10 +141,12 @@ def main():
         print("  [1] Run Standard 5-Layer Simulation (Happy Path - Zero-Latency)")
         print("  [2] Simulate Node Failure / Decoherence (Demonstrate Slime Mold Rerouting)")
         print("  [3] Simulate Psycho-Breaker Crisis (Demonstrate HRV Spike & Force Logout)")
-        print("  [4] View Current Mycelium Topology")
-        print("  [5] Exit Emulator\n")
+        print("  [4] Custom Payload Injection (Live Data Transmission)")
+        print("  [5] Simulate DNA Mutation (Demonstrate Reed-Solomon ECC)")
+        print("  [6] View Current Mycelium Topology")
+        print("  [7] Exit Emulator\n")
         
-        choice = input("Enter your choice (1-5): ").strip()
+        choice = input("Enter your choice (1-7): ").strip()
         
         if choice == '1':
             run_simulation_scenario("happy")
@@ -156,13 +158,23 @@ def main():
             run_simulation_scenario("crisis")
             input("\nPress Enter to return to menu...")
         elif choice == '4':
+            print(f"\n{CYAN}--- CUSTOM PAYLOAD INJECTION ---{RESET}")
+            custom_msg = input(f"{YELLOW}Enter your message to transmit: {RESET}").strip()
+            if not custom_msg:
+                custom_msg = "HELLO CUSTOM QUANTUM WORLD!"
+            run_simulation_scenario("happy", custom_message=custom_msg)
+            input("\nPress Enter to return to menu...")
+        elif choice == '5':
+            run_simulation_scenario("mutate")
+            input("\nPress Enter to return to menu...")
+        elif choice == '6':
             print_topology()
             input("Press Enter to return to menu...")
-        elif choice == '5':
+        elif choice == '7':
             print(f"\n{GREEN}Exiting Bio-Quantum Hybrid Network Emulator. Goodbye!{RESET}\n")
             break
         else:
-            print(f"\n{RED}Invalid choice. Please enter a number between 1 and 5.{RESET}")
+            print(f"\n{RED}Invalid choice. Please enter a number between 1 and 7.{RESET}")
             time.sleep(1.5)
 
 if __name__ == "__main__":
