@@ -2,7 +2,7 @@ import time
 import datetime
 import sys
 import os
-from src.layer1_net import build_mycelium_topology, get_routing_path
+from src.layer1_quantum import build_mycelium_topology
 from src.node import Node, GREEN, RED, CYAN, YELLOW, RESET
 import networkx as nx
 
@@ -61,7 +61,10 @@ def run_simulation_scenario(scenario: str):
     log_main("Initiating Packet Transfer Sequence...", CYAN)
     
     # Run the specific scenario
-    src_node_obj.send_initial_message(dst_node_id, message, scenario=scenario)
+    try:
+        src_node_obj.send_initial_message(dst_node_id, message, scenario=scenario)
+    except Exception as e:
+        log_main(f"Simulation exception: {e}", RED)
     
     print()
     time.sleep(1.0)

@@ -1,50 +1,45 @@
-# layer4_bio.py
-# Layer 4: Bio-Translation
-
-def string_to_binary(text: str) -> str:
-    """Converts a string to its 8-bit binary representation."""
-    return ''.join(format(ord(c), '08b') for c in text)
-
-def binary_to_string(binary: str) -> str:
-    """Converts a binary string back to text."""
-    chars = [chr(int(binary[i:i+8], 2)) for i in range(0, len(binary), 8) if len(binary[i:i+8]) == 8]
-    return ''.join(chars)
-
-def binary_to_dna(binary_string: str) -> str:
-    """
-    Translates binary to DNA bases:
-    00 -> A
-    01 -> C
-    10 -> G
-    11 -> T
-    """
-    mapping = {'00': 'A', '01': 'C', '10': 'G', '11': 'T'}
-    bases = []
-    # Ensure binary length is even
-    if len(binary_string) % 2 != 0:
-        binary_string = '0' + binary_string
+class BioTranslation:
+    """Layer 4: Bio-Translation - Encodes/decodes between digital text and DNA bases."""
+    def __init__(self, node_id, log_cb):
+        self.node_id = node_id
+        self.log = log_cb
+        self.upper_layer = None
+        self.lower_layer = None
         
-    for i in range(0, len(binary_string), 2):
-        bits = binary_string[i:i+2]
-        bases.append(mapping.get(bits, 'A'))
-    return ''.join(bases)
+    def set_layers(self, upper, lower):
+        self.upper_layer = upper
+        self.lower_layer = lower
 
-def dna_to_binary(dna_sequence: str) -> str:
-    """
-    Translates DNA bases back to binary.
-    """
-    reverse_mapping = {'A': '00', 'C': '01', 'G': '10', 'T': '11'}
-    bits = [reverse_mapping.get(base, '00') for base in dna_sequence]
-    return ''.join(bits)
+    def request(self, service: str, parameters: dict):
+        if service == "ENCODE_AND_SEND":
+            msg = parameters.get("message")
+            dna = self._encode(msg)
+            self.log(self.node_id, f"🧬 [Layer 4] Bio-Translation (Encoded DNA): {dna[:50]}...", "\033[96m")
+            self.lower_layer.request("SECURE_AND_SEND", {
+                "dna_payload": dna,
+                "dst": parameters.get("dst"),
+                "scenario": parameters.get("scenario")
+            })
 
-def encode_message_to_dna(message: str) -> str:
-    """Full encoding from string to DNA."""
-    binary = string_to_binary(message)
-    dna = binary_to_dna(binary)
-    return dna
+    def indicate(self, event: str, data: dict):
+        if event == "PACKET_RX":
+            dna = data.get("dna_payload")
+            message = self._decode(dna)
+            self.log(self.node_id, f"🧬 [Layer 4] Bio-Translation (Decoded): '{message}'", "\033[92m")
+            self.upper_layer.indicate("MESSAGE_ASSEMBLED", {"message": message})
+            
+    def confirm(self, status: str, result: dict):
+        if self.upper_layer:
+            self.upper_layer.confirm(status, result)
 
-def decode_dna_to_message(dna: str) -> str:
-    """Full decoding from DNA to string."""
-    binary = dna_to_binary(dna)
-    message = binary_to_string(binary)
-    return message
+    def _encode(self, text: str) -> str:
+        binary = ''.join(format(ord(c), '08b') for c in text)
+        mapping = {'00': 'A', '01': 'C', '10': 'G', '11': 'T'}
+        if len(binary) % 2 != 0: binary = '0' + binary
+        return ''.join(mapping.get(binary[i:i+2], 'A') for i in range(0, len(binary), 2))
+
+    def _decode(self, dna: str) -> str:
+        reverse_mapping = {'A': '00', 'C': '01', 'G': '10', 'T': '11'}
+        binary = ''.join(reverse_mapping.get(base, '00') for base in dna)
+        chars = [chr(int(binary[i:i+8], 2)) for i in range(0, len(binary), 8) if len(binary[i:i+8]) == 8]
+        return ''.join(chars)
