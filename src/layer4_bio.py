@@ -26,7 +26,7 @@ class BioTranslation:
             dna = data.get("dna_payload")
             message = self._decode(dna)
             self.log(self.node_id, f"🧬 [Layer 4] Bio-Translation (Decoded): '{message}'", "\033[92m")
-            self.upper_layer.indicate("MESSAGE_ASSEMBLED", {"message": message})
+            return self.upper_layer.indicate("MESSAGE_ASSEMBLED", {"message": message})
             
     def confirm(self, status: str, result: dict):
         if self.upper_layer:

@@ -3,11 +3,7 @@ import threading
 import json
 import datetime
 import networkx as nx
-from src.layer1_quantum import QuantumSubstrate
-from src.layer2_sensory import SensoryStream
-from src.layer3_soul import SoulSync
-from src.layer4_bio import BioTranslation
-from src.layer5_neural import NeuralInterface
+import networkx as nx
 
 GREEN = "\033[92m"
 RED = "\033[91m"
@@ -40,20 +36,11 @@ class Node:
         
         self.running = False
         self.thread = threading.Thread(target=self.listen, daemon=True)
+        self.layer1 = None
 
-        # Output explicit instantiation for layers
-        self.layer1 = QuantumSubstrate(self.node_id, log, self)
-        self.layer2 = SensoryStream(self.node_id, log)
-        self.layer3 = SoulSync(self.node_id, log)
-        self.layer4 = BioTranslation(self.node_id, log)
-        self.layer5 = NeuralInterface(self.node_id, log)
-
-        # Wire the layers together using strict Separation of Concerns
-        self.layer1.set_layers(upper=self.layer2)
-        self.layer2.set_layers(upper=self.layer3, lower=self.layer1)
-        self.layer3.set_layers(upper=self.layer4, lower=self.layer2)
-        self.layer4.set_layers(upper=self.layer5, lower=self.layer3)
-        self.layer5.set_layers(lower=self.layer4)
+    def set_layer1(self, layer1):
+        """Allows injecting the bottom-most layer of the QSP Stack."""
+        self.layer1 = layer1
 
     def start(self):
         self.running = True
@@ -111,7 +98,10 @@ class Node:
                 return
                 
             # Delegate entirely to Layer 1 (QuantumSubstrate)
-            success = self.layer1.indicate("PACKET_RX", packet)
+            if self.layer1:
+                success = self.layer1.indicate("PACKET_RX", packet)
+            else:
+                success = False
             
             # Send ACK or NACK back to the sender
             if success:
@@ -146,11 +136,3 @@ class Node:
         except Exception:
              # Assume node failure (timeout or connection refused)
              return False
-
-    def send_initial_message(self, dst: str, message: str, scenario: str = 'normal'):
-        """Initiates a message transfer by triggering Layer 5 directly."""
-        self.layer5.request("SEND_MESSAGE", {
-            "dst": dst,
-            "message": message,
-            "scenario": scenario
-        })

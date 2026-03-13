@@ -2,8 +2,12 @@ import time
 import datetime
 import sys
 import os
-from src.layer1_quantum import build_mycelium_topology
-from src.node import Node, GREEN, RED, CYAN, YELLOW, RESET
+from src.layer1_quantum import QuantumSubstrate, build_mycelium_topology
+from src.layer2_sensory import SensoryStream
+from src.layer3_soul import SoulSync
+from src.layer4_bio import BioTranslation
+from src.layer5_neural import NeuralInterface
+from src.node import Node, log, GREEN, RED, CYAN, YELLOW, RESET
 import networkx as nx
 
 def log_main(msg, color=RESET):
@@ -41,9 +45,29 @@ def run_simulation_scenario(scenario: str):
         port_mapping[n_id] = base_port + i
         
     active_nodes = []
+    layer5_map = {}
     host = '127.0.0.1'
     for n_id in nodes_id:
         node = Node(n_id, host, port_mapping[n_id], topology, port_mapping)
+        
+        # Explicitly instantiate the 5 layers
+        layer1 = QuantumSubstrate(n_id, log, node)
+        layer2 = SensoryStream(n_id, log)
+        layer3 = SoulSync(n_id, log)
+        layer4 = BioTranslation(n_id, log)
+        layer5 = NeuralInterface(n_id, log)
+
+        # Wire the layers together using strict Separation of Concerns
+        layer1.set_layers(upper=layer2)
+        layer2.set_layers(upper=layer3, lower=layer1)
+        layer3.set_layers(upper=layer4, lower=layer2)
+        layer4.set_layers(upper=layer5, lower=layer3)
+        layer5.set_layers(lower=layer4)
+
+        # Bind hardware container to the physical quantum substrate
+        node.set_layer1(layer1)
+        
+        layer5_map[n_id] = layer5
         active_nodes.append(node)
         
     for node in active_nodes:
@@ -54,15 +78,18 @@ def run_simulation_scenario(scenario: str):
     src_node_id = 'A'
     dst_node_id = 'D'
     message = "HELLO QUANTUM WORLD!"
-    
-    src_node_obj = next(n for n in active_nodes if n.node_id == src_node_id)
-    
+        
     print()
     log_main("Initiating Packet Transfer Sequence...", CYAN)
     
     # Run the specific scenario
     try:
-        src_node_obj.send_initial_message(dst_node_id, message, scenario=scenario)
+        src_layer5 = layer5_map[src_node_id]
+        src_layer5.request("SEND_MESSAGE", {
+            "dst": dst_node_id,
+            "message": message,
+            "scenario": scenario
+        })
     except Exception as e:
         log_main(f"Simulation exception: {e}", RED)
     

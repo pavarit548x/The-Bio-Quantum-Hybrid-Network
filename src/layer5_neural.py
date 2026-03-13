@@ -29,6 +29,7 @@ class NeuralInterface:
             self.log(self.node_id, "🧠 [Layer 5] Direct Cortical Stimulation active. Delivering data to Visual Cortex...", "\033[92m")
             self.log(self.node_id, "SUCCESS: Transmission Delivery Confirmed.", "\033[92m")
             self.log(self.node_id, "==================================================", "\033[92m")
+            return True
 
     def confirm(self, status: str, result: dict):
         pass

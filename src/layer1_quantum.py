@@ -48,11 +48,9 @@ class QuantumSubstrate:
             }
             success = self._route_and_forward(dst, packet)
             if success:
-                # Upstream accepted
-                pass
+                return True
             else:
-                # Failed
-                pass
+                return False
 
     def indicate(self, event: str, data: dict):
         if event == "PACKET_RX":
