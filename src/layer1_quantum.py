@@ -1,5 +1,30 @@
 import networkx as nx
 import time
+import random
+
+class DecoherenceTracker:
+    """Simulates quantum entanglement quality decay between nodes."""
+    def __init__(self, log_cb, node_id):
+        self.log = log_cb
+        self.node_id = node_id
+        self.entanglement_states = {} # {peer_node_id: quality_float}
+        self.decay_rate = 0.05
+        
+    def get_quality(self, peer: str) -> float:
+        return self.entanglement_states.get(peer, 1.0)
+        
+    def apply_decay(self, peer: str, distance: int = 1):
+        current = self.get_quality(peer)
+        # Random fluctuation + base decay based on distance/weight
+        decay = (self.decay_rate * distance) + random.uniform(0.0, 0.03)
+        self.entanglement_states[peer] = max(0.0, current - decay)
+        
+    def refresh_entanglement(self, peer: str):
+        self.log(self.node_id, f"💥 [Layer 1] CRITICAL: Decoherence too high. Triggering Quantum Refresh with Node {peer}...", "\033[95m")
+        time.sleep(0.5) # Simulate time taken to re-establish entanglement
+        self.entanglement_states[peer] = 1.0
+        self.log(self.node_id, f"✨ [Layer 1] Entanglement restored to 1.0 with Node {peer}", "\033[96m")
+
 
 def build_mycelium_topology() -> nx.Graph:
     """Creates a mesh topology of 5 Nodes representing the Mycelium network."""
@@ -30,6 +55,7 @@ class QuantumSubstrate:
         self.hardware = hardware_node
         self.topology = hardware_node.topology
         self.port_mapping = hardware_node.port_mapping
+        self.decoherence = DecoherenceTracker(log_cb, node_id)
         
     def set_layers(self, upper):
         self.upper_layer = upper
@@ -97,7 +123,18 @@ class QuantumSubstrate:
                 return False
                 
             next_hop = path[1]
-            self.log(self.node_id, f"➡️ Next hop computed: Node {next_hop}. Forwarding...", "\033[96m")
+            
+            # Physics Simulation: Check Entanglement Quality before sending
+            edge_weight = self.topology.edges[self.node_id, next_hop].get('weight', 1)
+            self.decoherence.apply_decay(next_hop, edge_weight)
+            quality = self.decoherence.get_quality(next_hop)
+            
+            if quality <= 0.85:
+                 self.log(self.node_id, f"⚠️ [Layer 1] Entanglement Quality dropped to {quality:.2f}", "\033[93m")
+                 self.decoherence.refresh_entanglement(next_hop)
+                 quality = 1.0
+            
+            self.log(self.node_id, f"➡️ [Layer 1] Entanglement Quality at {quality:.2f}... transmitting to {next_hop}.", "\033[96m")
             
             # Apply QoS from Layer 2
             self.upper_layer.indicate("APPLY_QOS", {})
