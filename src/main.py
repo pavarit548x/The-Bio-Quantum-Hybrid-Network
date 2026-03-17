@@ -2,12 +2,14 @@ import time
 import datetime
 import sys
 import os
-from src.layer1_quantum import QuantumSubstrate, build_mycelium_topology
-from src.layer2_sensory import SensoryStream
-from src.layer3_soul import SoulSync
-from src.layer4_bio import BioTranslation
-from src.layer5_neural import NeuralInterface
-from src.node import Node, log, GREEN, RED, CYAN, YELLOW, RESET
+
+sys.stdout.reconfigure(encoding='utf-8')
+from layer1_net import QuantumSubstrate, build_mycelium_topology
+from layer2_sensory import SensoryStream
+from layer3_soul import SoulSync
+from layer4_bio import BioTranslation
+from layer5_neural import NeuralInterface
+from node import Node, log, GREEN, RED, CYAN, YELLOW, RESET
 import networkx as nx
 
 def log_main(msg, color=RESET):

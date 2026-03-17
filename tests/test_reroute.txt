@@ -1,0 +1,71 @@
+
+============================================================
+[18:19:36.740] [SYSTEM] INITIALIZING SCENARIO: REROUTE
+============================================================
+
+[18:19:36.745] [Node A] Booted and listening on 127.0.0.1:5001...
+[18:19:36.745] [Node B] Booted and listening on 127.0.0.1:5002...
+[18:19:36.746] [Node C] Booted and listening on 127.0.0.1:5003...
+[18:19:36.746] [Node D] Booted and listening on 127.0.0.1:5004...
+[18:19:36.746] [Node E] Booted and listening on 127.0.0.1:5005...
+
+[18:19:37.747] [SYSTEM] Initiating Packet Transfer Sequence...
+[18:19:37.747] [Node A] ==================================================
+[18:19:37.747] [Node A] Initiating Transfer | Target: Node D | Scenario: REROUTE
+[18:19:37.747] [Node A] [i] Original Message: 'HELLO QUANTUM WORLD!'
+[18:19:38.247] [Node A] [i] [Layer 4] RS ECC Applied. DNA length extended.
+[18:19:38.247] [Node A] [i] [Layer 4] Bio-Translation (Encoded DNA):
+        [DNA-BLOCK 000] CAGACACCCATACATA
+        [DNA-BLOCK 010] CATTAGAACCACCCCC
+        [DNA-BLOCK 020] CAACCATGCCCACCCC
+        [DNA-BLOCK 030] CATCAGAACCCTCATT
+[18:19:38.248] [Node A] [>] [Layer 1] Entanglement Quality [█████████░] 0.95 ... transmitting to Node B.
+
+[18:19:38.248] [Node A] [*] [Layer 2] Buffering burst payload...
+[18:19:38.648] [Node A] [i] [Layer 2] Stream ~_~_~_~ Jitter smoothed to 0.1ms. Var: 0.002
+[18:19:38.648] [Node A] [+] [Layer 2] Fluidic Stream converted to Continuous Wave. Proceeding.
+
+[18:19:38.949] [Node B] [*] [Layer 1] Packet Arrived | ETH_HEADER: [SRC: A -> DST: D]
+
+  [ ! ] ================================================ [ ! ]
+  [ ! ] SYSTEM ABORT: CRITICAL DECOHERENCE IN NODE B     [ ! ]
+  [ ! ] ================================================ [ ! ]
+
+[18:19:39.450] [Node A] Connection to B refused or timed out. Triggering Slime Mold Re-routing...
+[18:19:39.650] [Node A] [>] [Layer 1] Entanglement Quality [████████░░] 0.89 ... transmitting to Node C.
+
+[18:19:39.650] [Node A] [*] [Layer 2] Buffering burst payload...
+[18:19:40.050] [Node A] [i] [Layer 2] Stream ~_~_~_~ Jitter smoothed to 0.1ms. Var: 0.004
+[18:19:40.050] [Node A] [+] [Layer 2] Fluidic Stream converted to Continuous Wave. Proceeding.
+
+[18:19:40.352] [Node C] [*] [Layer 1] Packet Arrived | ETH_HEADER: [SRC: A -> DST: D]
+[18:19:40.352] [Node C] Not the destination. Computing Slime Mold path to 'D'...
+[18:19:40.352] [Node C] [+] [Layer 3] Checks Passed: Vitals OK (HRV: 85.0, Cort: 15.0) [FORCED SIMULATION SUCCESS]
+[18:19:40.352] [Node C] [WARN] [Layer 1] Entanglement Quality [████████░░] 0.83
+[18:19:40.352] [Node C] [CRITICAL] [Layer 1] Decoherence too high. Triggering Quantum Refresh with Node E...
+[18:19:40.852] [Node C] [+] [Layer 1] Entanglement restored to 1.0 with Node E
+[18:19:40.852] [Node C] [>] [Layer 1] Entanglement Quality [██████████] 1.00 ... transmitting to Node E.
+
+[18:19:40.853] [Node C] [*] [Layer 2] Buffering burst payload...
+[18:19:41.253] [Node C] [i] [Layer 2] Stream ~_~_~_~ Jitter smoothed to 0.1ms. Var: 0.004
+[18:19:41.253] [Node C] [+] [Layer 2] Fluidic Stream converted to Continuous Wave. Proceeding.
+
+[18:19:41.554] [Node E] [*] [Layer 1] Packet Arrived | ETH_HEADER: [SRC: A -> DST: D]
+[18:19:41.554] [Node E] Not the destination. Computing Slime Mold path to 'D'...
+[18:19:41.554] [Node E] [+] [Layer 3] Checks Passed: Vitals OK (HRV: 85.0, Cort: 15.0) [FORCED SIMULATION SUCCESS]
+[18:19:41.554] [Node E] [>] [Layer 1] Entanglement Quality [█████████░] 0.94 ... transmitting to Node D.
+
+[18:19:41.554] [Node E] [*] [Layer 2] Buffering burst payload...
+[18:19:41.955] [Node E] [i] [Layer 2] Stream ~_~_~_~ Jitter smoothed to 0.1ms. Var: 0.005
+[18:19:41.955] [Node E] [+] [Layer 2] Fluidic Stream converted to Continuous Wave. Proceeding.
+
+[18:19:42.265] [Node D] [*] [Layer 1] Packet Arrived | ETH_HEADER: [SRC: A -> DST: D]
+[18:19:42.265] [Node D] [SUCCESS] Packet reached final destination! Forwarding up the stack...
+[18:19:42.265] [Node D] [+] [Layer 3] Checks Passed: Vitals OK (HRV: 85.0, Cort: 15.0) [FORCED SIMULATION SUCCESS]
+[18:19:42.266] [Node D] [SUCCESS] [Layer 4] Bio-Translation (Decoded): 'HELLO QUANTUM WORLD!'
+[18:19:42.766] [Node D] [>] [Layer 5] Direct Cortical Stimulation active. Delivering data to Visual Cortex...
+[18:19:42.766] [Node D] SUCCESS: Transmission Delivery Confirmed.
+[18:19:42.766] [Node D] ==================================================
+
+[18:19:43.767] [SYSTEM] Shutting down Bio-Quantum Network local nodes...
+[18:19:44.268] [SYSTEM] All local simulation nodes offline. Scenario complete.

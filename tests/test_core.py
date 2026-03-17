@@ -5,7 +5,7 @@ from unittest.mock import patch, MagicMock
 from src.layer4_bio import BioTranslation
 from src.layer3_soul import PsychoBreaker, SoulSync
 from src.layer2_sensory import SensoryStream
-from src.layer1_quantum import QuantumSubstrate, DecoherenceTracker
+from src.layer1_net import QuantumSubstrate, DecoherenceTracker
 import networkx as nx
 
 class DummyLogger:
